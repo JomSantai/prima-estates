@@ -1,0 +1,39 @@
+@model List<PrimaEstates.Models.Enquiry>
+@{
+    ViewData["Title"] = "Enquiries";
+    Layout = "_AdminLayout";
+}
+
+@if (!Model.Any())
+{
+    <p class="muted">No enquiries yet.</p>
+}
+else
+{
+    <table class="admin-table">
+        <thead><tr><th>From</th><th>Contact</th><th>Property</th><th>Message</th><th>Received</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr class="@(e.IsRead ? "" : "row-unread")">
+                    <td>@e.Name</td>
+                    <td>@e.Email<br /><span class="muted">@e.Phone</span></td>
+                    <td>@(e.Property?.Title ?? "General enquiry")</td>
+                    <td class="msg-cell">@e.Message</td>
+                    <td>@e.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")</td>
+                    <td class="row-actions">
+                        <form method="post" asp-controller="Admin" asp-action="ToggleEnquiryRead" asp-route-id="@e.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit">@(e.IsRead ? "Mark unread" : "Mark read")</button>
+                        </form>
+                        <form method="post" asp-controller="Admin" asp-action="DeleteEnquiry" asp-route-id="@e.Id"
+                              onsubmit="return confirm('Delete this enquiry?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="link-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

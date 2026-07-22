@@ -1,0 +1,27 @@
+@model List<PrimaEstates.Models.Agent>
+@{ ViewData["Title"] = "Our Agents"; }
+
+<section class="page-head">
+    <div class="container">
+        <h1>Meet the team</h1>
+        <p>Board-registered negotiators who live and work in the neighbourhoods they sell.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container agent-grid">
+        @foreach (var a in Model)
+        {
+            <div class="agent-profile">
+                <img src="@(string.IsNullOrEmpty(a.PhotoUrl) ? "/img/placeholder.svg" : a.PhotoUrl)" alt="@a.Name" />
+                <h3>@a.Name</h3>
+                <span class="agent-ren">@a.RenLicense</span>
+                <p>@a.Properties.Count active listing@(a.Properties.Count == 1 ? "" : "s")</p>
+                <div class="agent-contact">
+                    <span>@a.Phone</span>
+                    <span>@a.Email</span>
+                </div>
+            </div>
+        }
+    </div>
+</section>

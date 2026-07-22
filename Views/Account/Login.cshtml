@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Agent Login";
+    Layout = "_Layout";
+}
+<section class="section login-section">
+    <div class="login-card">
+        <h1>Agent login</h1>
+        <p class="login-sub">Sign in to manage listings, agents, and enquiries.</p>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-error">@ViewBag.Error</div>
+        }
+        <form method="post" asp-controller="Account" asp-action="Login">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <label>Username</label>
+            <input type="text" name="username" autocomplete="username" required autofocus />
+            <label>Password</label>
+            <input type="password" name="password" autocomplete="current-password" required />
+            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+        </form>
+    </div>
+</section>

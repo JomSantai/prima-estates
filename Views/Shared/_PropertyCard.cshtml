@@ -1,0 +1,23 @@
+@model PrimaEstates.Models.Property
+<a class="prop-card" asp-controller="Properties" asp-action="Details" asp-route-id="@Model.Id">
+    <div class="prop-card-media">
+        <img src="@(string.IsNullOrEmpty(Model.CoverImageUrl) ? "/img/placeholder.svg" : Model.CoverImageUrl)" alt="@Model.Title" loading="lazy" />
+        <span class="prop-badge @(Model.ListingType == ListingType.Rent ? "badge-rent" : "badge-sale")">
+            For @(Model.ListingType == ListingType.Rent ? "Rent" : "Sale")
+        </span>
+        @if (Model.IsFeatured)
+        {
+            <span class="prop-badge badge-featured">Featured</span>
+        }
+    </div>
+    <div class="prop-card-body">
+        <div class="prop-price">@Model.PriceDisplay</div>
+        <h3>@Model.Title</h3>
+        <div class="prop-loc">@Model.City, @Model.State · @Model.TypeDisplay</div>
+        <div class="prop-specs">
+            @if (Model.Bedrooms > 0) { <span>@Model.Bedrooms bd</span> }
+            @if (Model.Bathrooms > 0) { <span>@Model.Bathrooms ba</span> }
+            <span>@Model.BuiltUpSqft.ToString("N0") sqft</span>
+        </div>
+    </div>
+</a>

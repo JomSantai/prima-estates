@@ -1,0 +1,11 @@
+bin/
+obj/
+**/bin/
+**/obj/
+*.db
+*.db-shm
+*.db-wal
+.git/
+.gitignore
+*.md
+wwwroot/uploads/*

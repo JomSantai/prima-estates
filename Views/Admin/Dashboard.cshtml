@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
+    var recentEnquiries = (List<Enquiry>)ViewBag.RecentEnquiries;
+    var recentProperties = (List<Property>)ViewBag.RecentProperties;
+}
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <span class="stat-value">@ViewBag.TotalProperties</span>
+        <span class="stat-label">Total properties</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">@ViewBag.ForSale</span>
+        <span class="stat-label">Active for sale</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">@ViewBag.ForRent</span>
+        <span class="stat-label">Active for rent</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">@ViewBag.SoldOrRented</span>
+        <span class="stat-label">Sold / rented</span>
+    </div>
+    <div class="stat-card @(ViewBag.UnreadEnquiries > 0 ? "stat-alert" : "")">
+        <span class="stat-value">@ViewBag.UnreadEnquiries</span>
+        <span class="stat-label">Unread enquiries</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">@ViewBag.AgentCount</span>
+        <span class="stat-label">Agents</span>
+    </div>
+</div>
+
+<div class="admin-two-col">
+    <section class="panel">
+        <div class="panel-head">
+            <h2>Latest enquiries</h2>
+            <a asp-controller="Admin" asp-action="Enquiries">View all</a>
+        </div>
+        @if (!recentEnquiries.Any())
+        {
+            <p class="muted">No enquiries yet. When visitors submit the contact or enquiry form, they appear here.</p>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead><tr><th>From</th><th>Property</th><th>Received</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var e in recentEnquiries)
+                    {
+                        <tr class="@(e.IsRead ? "" : "row-unread")">
+                            <td>@e.Name<br /><span class="muted">@e.Email</span></td>
+                            <td>@(e.Property?.Title ?? "General enquiry")</td>
+                            <td>@e.CreatedAt.ToLocalTime().ToString("dd MMM, HH:mm")</td>
+                            <td>@(e.IsRead ? "" : "●")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </section>
+
+    <section class="panel">
+        <div class="panel-head">
+            <h2>Recently added properties</h2>
+            <a asp-controller="Admin" asp-action="PropertyForm">+ Add property</a>
+        </div>
+        <table class="admin-table">
+            <thead><tr><th>Title</th><th>Price</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var p in recentProperties)
+                {
+                    <tr>
+                        <td><a asp-controller="Admin" asp-action="PropertyForm" asp-route-id="@p.Id">@p.Title</a></td>
+                        <td>@p.PriceDisplay</td>
+                        <td><span class="status status-@p.Status.ToString().ToLower()">@p.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>

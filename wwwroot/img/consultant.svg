@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <rect width="600" height="800" fill="#e7e3d8"/>
+  <!-- professional silhouette placeholder: replace with your own consultant photo -->
+  <g fill="#1b2e26">
+    <circle cx="300" cy="240" r="86" opacity="0.9"/>
+    <path d="M300 340 C 190 340, 130 430, 118 560 L 118 800 L 482 800 L 482 560 C 470 430, 410 340, 300 340 Z" opacity="0.9"/>
+    <path d="M300 352 L 268 392 L 300 560 L 332 392 Z" fill="#a8894b"/>
+    <path d="M300 352 L 276 372 L 300 396 L 324 372 Z" fill="#fcfbf8"/>
+  </g>
+  <text x="300" y="740" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#fcfbf8">Replace with your photo</text>
+</svg>

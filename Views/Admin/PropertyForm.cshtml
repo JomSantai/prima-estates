@@ -1,0 +1,77 @@
+@model PrimaEstates.Models.Property
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add property" : "Edit property";
+    Layout = "_AdminLayout";
+    var agents = (List<Agent>)ViewBag.Agents;
+}
+
+<form method="post" enctype="multipart/form-data" class="admin-form" asp-controller="Admin" asp-action="PropertyForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <h2 class="form-section-title">Listing details</h2>
+    <div class="form-grid">
+        <label class="span-2">Title <input asp-for="Title" required maxlength="150" /></label>
+        <label>Listing type
+            <select asp-for="ListingType" asp-items="Html.GetEnumSelectList<ListingType>()"></select>
+        </label>
+        <label>Property type
+            <select asp-for="Type" asp-items="Html.GetEnumSelectList<PropertyType>()"></select>
+        </label>
+        <label>Status
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<PropertyStatus>()"></select>
+        </label>
+        <label>Price (RM) <input asp-for="Price" type="number" step="0.01" min="0" required /></label>
+        <label>Bedrooms <input asp-for="Bedrooms" type="number" min="0" /></label>
+        <label>Bathrooms <input asp-for="Bathrooms" type="number" min="0" /></label>
+        <label>Car parks <input asp-for="CarParks" type="number" min="0" /></label>
+        <label>Built-up (sqft) <input asp-for="BuiltUpSqft" type="number" min="0" /></label>
+        <label>City / area <input asp-for="City" required /></label>
+        <label>State <input asp-for="State" /></label>
+        <label class="span-2">Address <input asp-for="Address" /></label>
+        <label>Agent
+            <select asp-for="AgentId">
+                <option value="">— Unassigned —</option>
+                @foreach (var a in agents)
+                {
+                    <option value="@a.Id">@a.Name</option>
+                }
+            </select>
+        </label>
+        <label class="check-label"><input asp-for="IsFeatured" type="checkbox" /> Featured on homepage</label>
+        <label class="span-2">Description
+            <textarea asp-for="Description" rows="6"></textarea>
+        </label>
+    </div>
+
+    <h2 class="form-section-title">Images</h2>
+    <div class="form-grid">
+        <label class="span-2">Cover image URL
+            <input asp-for="CoverImageUrl" placeholder="https://… or leave blank and upload below" />
+        </label>
+        <label>Upload cover image <input type="file" name="coverFile" accept=".jpg,.jpeg,.png,.webp" /></label>
+        <label>Add gallery images <input type="file" name="galleryFiles" accept=".jpg,.jpeg,.png,.webp" multiple /></label>
+    </div>
+
+    @if (Model.Id != 0 && Model.Images.Any())
+    {
+        <div class="gallery-manage">
+            @foreach (var img in Model.Images.OrderBy(i => i.SortOrder))
+            {
+                <div class="gallery-item">
+                    <img src="@img.Url" alt="" />
+                    <form method="post" asp-controller="Admin" asp-action="DeleteImage" asp-route-id="@img.Id" asp-route-propertyId="@Model.Id"
+                          onsubmit="return confirm('Remove this image?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="link-danger">Remove</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="form-actions">
+        <a class="btn" asp-controller="Admin" asp-action="Properties">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save property</button>
+    </div>
+</form>

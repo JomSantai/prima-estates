@@ -1,0 +1,22 @@
+@model PrimaEstates.Models.Agent
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add agent" : "Edit agent";
+    Layout = "_AdminLayout";
+}
+
+<form method="post" enctype="multipart/form-data" class="admin-form" asp-controller="Admin" asp-action="AgentForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div class="form-grid">
+        <label>Full name <input asp-for="Name" required /></label>
+        <label>REN licence <input asp-for="RenLicense" placeholder="REN 12345" /></label>
+        <label>Phone <input asp-for="Phone" /></label>
+        <label>Email <input asp-for="Email" type="email" /></label>
+        <label>Photo URL <input asp-for="PhotoUrl" placeholder="https://… or leave blank and upload below" /></label>
+        <label>Upload photo <input type="file" name="photoFile" accept=".jpg,.jpeg,.png,.webp" /></label>
+    </div>
+    <div class="form-actions">
+        <a class="btn" asp-controller="Admin" asp-action="Agents">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save agent</button>
+    </div>
+</form>

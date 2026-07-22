@@ -1,0 +1,97 @@
+@model PrimaEstates.Models.Property
+@{
+    ViewData["Title"] = Model.Title;
+    var similar = (List<Property>)ViewBag.Similar;
+    var gallery = Model.Images.Any()
+        ? Model.Images.Select(i => i.Url).ToList()
+        : new List<string> { string.IsNullOrEmpty(Model.CoverImageUrl) ? "/img/placeholder.svg" : Model.CoverImageUrl };
+}
+
+<section class="section detail-section">
+    <div class="container">
+        <div class="detail-gallery">
+            <div class="dg-main">
+                <img id="mainImage" src="@gallery.First()" alt="@Model.Title" />
+            </div>
+            @if (gallery.Count > 1)
+            {
+                <div class="dg-thumbs">
+                    @foreach (var url in gallery)
+                    {
+                        <img src="@url" alt="" onclick="document.getElementById('mainImage').src = this.src" />
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-main">
+                <div class="detail-badges">
+                    <span class="prop-badge @(Model.ListingType == ListingType.Rent ? "badge-rent" : "badge-sale")">For @(Model.ListingType == ListingType.Rent ? "Rent" : "Sale")</span>
+                    <span class="prop-badge badge-type">@Model.TypeDisplay</span>
+                </div>
+                <h1>@Model.Title</h1>
+                <p class="detail-address">@Model.Address, @Model.City, @Model.State</p>
+                <div class="detail-price">@Model.PriceDisplay</div>
+
+                <div class="spec-row">
+                    @if (Model.Bedrooms > 0) { <div><strong>@Model.Bedrooms</strong><span>Bedrooms</span></div> }
+                    @if (Model.Bathrooms > 0) { <div><strong>@Model.Bathrooms</strong><span>Bathrooms</span></div> }
+                    @if (Model.CarParks > 0) { <div><strong>@Model.CarParks</strong><span>Car parks</span></div> }
+                    <div><strong>@Model.BuiltUpSqft.ToString("N0")</strong><span>Built-up sqft</span></div>
+                </div>
+
+                <h2>About this property</h2>
+                <p class="detail-desc">@Model.Description</p>
+            </div>
+
+            <aside class="detail-side">
+                @if (Model.Agent != null)
+                {
+                    <div class="agent-card">
+                        <img src="@(string.IsNullOrEmpty(Model.Agent.PhotoUrl) ? "/img/placeholder.svg" : Model.Agent.PhotoUrl)" alt="@Model.Agent.Name" />
+                        <div>
+                            <strong>@Model.Agent.Name</strong>
+                            <span>@Model.Agent.RenLicense</span>
+                            <span>@Model.Agent.Phone</span>
+                        </div>
+                    </div>
+                }
+
+                <div class="enquiry-card">
+                    <h3>Enquire about this property</h3>
+                    @if (TempData["EnquirySuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["EnquirySuccess"]</div>
+                    }
+                    @if (TempData["EnquiryError"] != null)
+                    {
+                        <div class="alert alert-error">@TempData["EnquiryError"]</div>
+                    }
+                    <form method="post" asp-controller="Properties" asp-action="Enquire">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PropertyId" value="@Model.Id" />
+                        <input type="text" name="Name" placeholder="Your name" required />
+                        <input type="email" name="Email" placeholder="Email address" required />
+                        <input type="tel" name="Phone" placeholder="Phone / WhatsApp" />
+                        <textarea name="Message" rows="4" required>Hi, I'm interested in "@Model.Title". Please contact me with more details.</textarea>
+                        <button type="submit" class="btn btn-primary btn-block">Send enquiry</button>
+                    </form>
+                </div>
+            </aside>
+        </div>
+
+        @if (similar.Any())
+        {
+            <div class="section-head" style="margin-top:3rem">
+                <h2>More in @Model.City</h2>
+            </div>
+            <div class="prop-grid">
+                @foreach (var p in similar)
+                {
+                    <partial name="_PropertyCard" model="p" />
+                }
+            </div>
+        }
+    </div>
+</section>

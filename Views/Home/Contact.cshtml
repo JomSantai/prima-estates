@@ -1,0 +1,34 @@
+@{ ViewData["Title"] = "Contact"; }
+
+<section class="page-head">
+    <div class="container">
+        <h1>Get in touch</h1>
+        <p>Buying, selling, renting, or just curious about the market — talk to us.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container contact-grid">
+        <div class="contact-info">
+            <h3>Prima Estates Sdn. Bhd.</h3>
+            <p>No. 12, Jalan Batu Nilam 5,<br />Bandar Bukit Tinggi,<br />41200 Klang, Selangor</p>
+            <p><strong>Phone:</strong> +60 3-3323 8888</p>
+            <p><strong>Email:</strong> hello@primaestates.my</p>
+            <p><strong>Hours:</strong> Mon–Sat, 9:30am–6:30pm</p>
+        </div>
+        <div class="enquiry-card">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            <form method="post" asp-controller="Home" asp-action="Contact">
+                @Html.AntiForgeryToken()
+                <input type="text" name="Name" placeholder="Your name" required />
+                <input type="email" name="Email" placeholder="Email address" required />
+                <input type="tel" name="Phone" placeholder="Phone / WhatsApp" />
+                <textarea name="Message" rows="6" placeholder="How can we help?" required></textarea>
+                <button type="submit" class="btn btn-primary">Send message</button>
+            </form>
+        </div>
+    </div>
+</section>

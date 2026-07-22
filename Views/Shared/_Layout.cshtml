@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] != null ? ViewData["Title"] + " · " : "")Prima Estates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">P</span>
+                <span class="brand-text">Prima <em>Estates</em></span>
+            </a>
+            <nav class="main-nav" id="mainNav">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Properties" asp-action="Index" asp-route-listingType="Sale">Buy</a>
+                <a asp-controller="Properties" asp-action="Index" asp-route-listingType="Rent">Rent</a>
+                <a asp-controller="Home" asp-action="Agents">Agents</a>
+                <a asp-controller="Home" asp-action="Contact">Contact</a>
+                <a class="nav-cta" asp-controller="Account" asp-action="Login">Agent Login</a>
+            </nav>
+            <button class="nav-toggle" aria-label="Toggle menu" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+        </div>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="brand footer-brand"><span class="brand-mark">P</span> Prima <em>Estates</em></div>
+                <p>Trusted property specialists serving the Klang Valley since 2012. Buy, sell, or rent with agents who know every street.</p>
+            </div>
+            <div>
+                <h4>Explore</h4>
+                <a asp-controller="Properties" asp-action="Index" asp-route-listingType="Sale">Properties for sale</a>
+                <a asp-controller="Properties" asp-action="Index" asp-route-listingType="Rent">Properties for rent</a>
+                <a asp-controller="Home" asp-action="Agents">Our agents</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>No. 12, Jalan Batu Nilam 5,<br />Bandar Bukit Tinggi, 41200 Klang</p>
+                <p>+60 3-3323 8888<br />hello@primaestates.my</p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>© @DateTime.Now.Year Prima Estates Sdn. Bhd. All rights reserved.</span>
+        </div>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

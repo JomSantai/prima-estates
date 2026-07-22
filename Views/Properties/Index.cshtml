@@ -1,0 +1,82 @@
+@model List<PrimaEstates.Models.Property>
+@{
+    ViewData["Title"] = "Properties";
+    var cities = (List<string>)ViewBag.Cities;
+    int page = ViewBag.Page, totalPages = ViewBag.TotalPages, total = ViewBag.Total;
+    var query = Context.Request.Query;
+}
+
+<section class="page-head">
+    <div class="container">
+        <h1>Browse properties</h1>
+        <p>@total listing@(total == 1 ? "" : "s") available</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <form class="filter-bar" method="get">
+            <input type="text" name="q" value="@query["q"]" placeholder="Keyword…" />
+            <select name="listingType">
+                <option value="">Buy or Rent</option>
+                <option value="Sale" selected="@(query["listingType"] == "Sale")">For Sale</option>
+                <option value="Rent" selected="@(query["listingType"] == "Rent")">For Rent</option>
+            </select>
+            <select name="type">
+                <option value="">Any type</option>
+                @foreach (var t in new[] { "Condominium", "Apartment", "Terrace", "SemiD", "Bungalow", "ShopLot", "Land" })
+                {
+                    <option value="@t" selected="@(query["type"] == t)">@(t == "SemiD" ? "Semi-D" : t == "ShopLot" ? "Shop Lot" : t)</option>
+                }
+            </select>
+            <select name="city">
+                <option value="">All areas</option>
+                @foreach (var c in cities)
+                {
+                    <option value="@c" selected="@(query["city"] == c)">@c</option>
+                }
+            </select>
+            <input type="number" name="minPrice" value="@query["minPrice"]" placeholder="Min RM" min="0" />
+            <input type="number" name="maxPrice" value="@query["maxPrice"]" placeholder="Max RM" min="0" />
+            <select name="beds">
+                <option value="">Beds</option>
+                @for (int b = 1; b <= 5; b++)
+                {
+                    <option value="@b" selected="@(query["beds"] == b.ToString())">@b+</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <h3>No properties match those filters</h3>
+                <p>Try widening the price range or removing a filter. New listings are added every week.</p>
+            </div>
+        }
+        else
+        {
+            <div class="prop-grid">
+                @foreach (var p in Model)
+                {
+                    <partial name="_PropertyCard" model="p" />
+                }
+            </div>
+
+            @if (totalPages > 1)
+            {
+                <nav class="pagination">
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        var qs = new Dictionary<string, string?>();
+                        foreach (var kv in query) { if (kv.Key != "page") qs[kv.Key] = kv.Value; }
+                        qs["page"] = i.ToString();
+                        <a class="@(i == page ? "active" : "")"
+                           href="@Url.Action("Index", qs.Aggregate(new RouteValueDictionary(), (d, kv) => { d[kv.Key] = kv.Value; return d; }))">@i</a>
+                    }
+                </nav>
+            }
+        }
+    </div>
+</section>

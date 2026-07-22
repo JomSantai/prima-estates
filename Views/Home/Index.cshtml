@@ -1,0 +1,132 @@
+@{
+    ViewData["Title"] = "Find your place in the Klang Valley";
+    var featured = (List<Property>)ViewBag.Featured;
+    var latest = (List<Property>)ViewBag.Latest;
+    var cities = (List<string>)ViewBag.Cities;
+}
+
+<section class="hero">
+    <div class="container hero-inner">
+        <p class="hero-eyebrow">Klang Valley property specialists</p>
+        <h1>Every street has a story.<br />We help you find yours.</h1>
+        <form class="hero-search" method="get" asp-controller="Properties" asp-action="Index">
+            <div class="hs-tabs">
+                <label><input type="radio" name="listingType" value="Sale" checked /> <span>Buy</span></label>
+                <label><input type="radio" name="listingType" value="Rent" /> <span>Rent</span></label>
+            </div>
+            <div class="hs-fields">
+                <input type="text" name="q" placeholder="Search by area, project, or street…" />
+                <select name="city">
+                    <option value="">All areas</option>
+                    @foreach (var c in cities) { <option value="@c">@c</option> }
+                </select>
+                <select name="type">
+                    <option value="">Any type</option>
+                    <option value="Condominium">Condominium</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Terrace">Terrace</option>
+                    <option value="SemiD">Semi-D</option>
+                    <option value="Bungalow">Bungalow</option>
+                    <option value="ShopLot">Shop Lot</option>
+                    <option value="Land">Land</option>
+                </select>
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="hero-stats">
+            <div><strong>1,200+</strong><span>Homes matched</span></div>
+            <div><strong>14 yrs</strong><span>In the Valley</span></div>
+            <div><strong>REA licensed</strong><span>Board-registered firm</span></div>
+        </div>
+    </div>
+</section>
+
+@if (featured.Any())
+{
+    <section class="section">
+        <div class="container">
+            <div class="section-head">
+                <h2>Featured listings</h2>
+                <a class="section-link" asp-controller="Properties" asp-action="Index">View all →</a>
+            </div>
+            <div class="prop-grid">
+                @foreach (var p in featured)
+                {
+                    <partial name="_PropertyCard" model="p" />
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-head">
+            <h2>Fresh on the market</h2>
+        </div>
+        <div class="prop-grid">
+            @foreach (var p in latest)
+            {
+                <partial name="_PropertyCard" model="p" />
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section services-section">
+    <div class="container">
+        <div class="section-head section-head-center">
+            <h2>How we help you sell</h2>
+            <p class="section-sub">From valuation to keys handed over — one team handling the whole journey.</p>
+        </div>
+        <div class="services-layout">
+            <div class="services-col">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7h6M9 11h6M9 15h3"/><rect x="5" y="3" width="14" height="18" rx="2"/></svg>
+                    </div>
+                    <h3>Market Price Check</h3>
+                    <p>We obtain current market valuations from registered property valuers to determine the financing amount your buyer can be approved for.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+                    </div>
+                    <h3>Advisory Services</h3>
+                    <p>Consultation for every buy, sell, or rental transaction — guidance from early preparation right until the deal is completed.</p>
+                </div>
+            </div>
+
+            <div class="services-figure">
+                <img src="~/img/consultant.svg" alt="Prima Estates property consultant" />
+            </div>
+
+            <div class="services-col">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <h3>Advertising</h3>
+                    <p>Integrated marketing both offline and online. We make sure every property listing is seen by as many buyers as possible.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="7" r="2.5"/><circle cx="12" cy="16" r="2.5"/><path d="M8.5 9l2.5 4.5M15.5 9L13 13.5"/></svg>
+                    </div>
+                    <h3>Sales Process</h3>
+                    <p>We smooth out financing applications, ownership transfer, and every step of the paperwork in between — so nothing stalls the sale.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section cta-band">
+    <div class="container cta-inner">
+        <div>
+            <h2>Selling or renting out?</h2>
+            <p>List with Prima Estates and reach serious buyers across the Klang Valley. Free valuation, no obligation.</p>
+        </div>
+        <a class="btn btn-light" asp-controller="Home" asp-action="Contact">Get a free valuation</a>
+    </div>
+</section>

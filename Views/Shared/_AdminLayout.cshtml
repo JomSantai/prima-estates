@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Prima Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="admin-body">
+    <aside class="admin-sidebar">
+        <div class="admin-brand">Prima <em>Admin</em></div>
+        <nav>
+            <a asp-controller="Admin" asp-action="Dashboard" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">Dashboard</a>
+            <a asp-controller="Admin" asp-action="Properties" class="@(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Propert") == true ? "active" : "")">Properties</a>
+            <a asp-controller="Admin" asp-action="Agents" class="@(ViewContext.RouteData.Values["action"]?.ToString()?.Contains("Agent") == true ? "active" : "")">Agents</a>
+            <a asp-controller="Admin" asp-action="Enquiries" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Enquiries" ? "active" : "")">Enquiries</a>
+        </nav>
+        <div class="admin-sidebar-footer">
+            <a asp-controller="Home" asp-action="Index" target="_blank">View site ↗</a>
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                @Html.AntiForgeryToken()
+                <button type="submit">Sign out</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <h1>@ViewData["Title"]</h1>
+            <span class="admin-user">@(User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name)</span>
+        </header>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        <div class="admin-content">
+            @RenderBody()
+        </div>
+    </main>
+</body>
+</html>

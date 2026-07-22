@@ -1,0 +1,42 @@
+@model List<PrimaEstates.Models.Property>
+@{
+    ViewData["Title"] = "Properties";
+    Layout = "_AdminLayout";
+}
+
+<div class="toolbar">
+    <form method="get" class="toolbar-search">
+        <input type="text" name="q" value="@ViewBag.Query" placeholder="Search title or city…" />
+        <button type="submit" class="btn">Search</button>
+    </form>
+    <a class="btn btn-primary" asp-controller="Admin" asp-action="PropertyForm">+ Add property</a>
+</div>
+
+<table class="admin-table">
+    <thead>
+        <tr><th></th><th>Title</th><th>Type</th><th>Listing</th><th>Price</th><th>City</th><th>Status</th><th>Agent</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td><img class="thumb" src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.svg" : p.CoverImageUrl)" alt="" /></td>
+                <td><a asp-controller="Admin" asp-action="PropertyForm" asp-route-id="@p.Id">@p.Title</a>@(p.IsFeatured ? " ⭐" : "")</td>
+                <td>@p.TypeDisplay</td>
+                <td>@p.ListingType</td>
+                <td>@p.PriceDisplay</td>
+                <td>@p.City</td>
+                <td><span class="status status-@p.Status.ToString().ToLower()">@p.Status</span></td>
+                <td>@(p.Agent?.Name ?? "—")</td>
+                <td class="row-actions">
+                    <a asp-controller="Admin" asp-action="PropertyForm" asp-route-id="@p.Id">Edit</a>
+                    <form method="post" asp-controller="Admin" asp-action="DeleteProperty" asp-route-id="@p.Id"
+                          onsubmit="return confirm('Delete this property? This cannot be undone.');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="link-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

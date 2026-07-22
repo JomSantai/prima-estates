@@ -1,0 +1,35 @@
+@model List<PrimaEstates.Models.Agent>
+@{
+    ViewData["Title"] = "Agents";
+    Layout = "_AdminLayout";
+}
+
+<div class="toolbar">
+    <span></span>
+    <a class="btn btn-primary" asp-controller="Admin" asp-action="AgentForm">+ Add agent</a>
+</div>
+
+<table class="admin-table">
+    <thead><tr><th></th><th>Name</th><th>REN</th><th>Phone</th><th>Email</th><th>Listings</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td><img class="thumb thumb-round" src="@(string.IsNullOrEmpty(a.PhotoUrl) ? "/img/placeholder.svg" : a.PhotoUrl)" alt="" /></td>
+                <td><a asp-controller="Admin" asp-action="AgentForm" asp-route-id="@a.Id">@a.Name</a></td>
+                <td>@a.RenLicense</td>
+                <td>@a.Phone</td>
+                <td>@a.Email</td>
+                <td>@a.Properties.Count</td>
+                <td class="row-actions">
+                    <a asp-controller="Admin" asp-action="AgentForm" asp-route-id="@a.Id">Edit</a>
+                    <form method="post" asp-controller="Admin" asp-action="DeleteAgent" asp-route-id="@a.Id"
+                          onsubmit="return confirm('Delete this agent? Their listings will be kept but unassigned.');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="link-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
