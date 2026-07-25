@@ -10,7 +10,8 @@
 }
 else
 {
-    <table class="admin-table">
+    <div class="table-scroll">
+<table class="admin-table">
         <thead><tr><th>From</th><th>Contact</th><th>Property</th><th>Message</th><th>Received</th><th></th></tr></thead>
         <tbody>
             @foreach (var e in Model)
@@ -36,4 +37,5 @@ else
             }
         </tbody>
     </table>
+</div>
 }

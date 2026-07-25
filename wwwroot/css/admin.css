@@ -158,5 +158,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .form-grid .span-2 { grid-column: span 1; }
   .admin-sidebar { width: 190px; }
   .admin-main { padding: 1.25rem; }
-  .admin-table { display: block; overflow-x: auto; }
+  /* Never set display:block on the <table> itself - it destroys the table
+     layout algorithm and cells stop aligning. Scroll the wrapper instead. */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll .admin-table { min-width: 720px; }
 }
