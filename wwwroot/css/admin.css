@@ -94,11 +94,17 @@ img { display: block; }
 .status-sold, .status-rented { background: #ececec; color: #555; }
 .status-hidden { background: #fbeaea; color: #8a2323; }
 
-.row-actions { display: flex; gap: 0.6rem; align-items: center; white-space: nowrap; }
-.row-actions form { display: inline; }
+/* Keep this a normal table-cell: setting display:flex on a <td> removes it from
+   the table layout algorithm, so its height and borders stop matching the row. */
+.row-actions { white-space: nowrap; }
+.row-actions > a,
+.row-actions > form { display: inline-block; vertical-align: middle; }
+.row-actions > a { margin-right: 0.6rem; }
+.row-actions > form + form { margin-left: 0.6rem; }
 .row-actions button {
   background: none; border: none; font: inherit; cursor: pointer;
   color: var(--pine); font-weight: 600; font-size: 0.88rem; padding: 0;
+  vertical-align: middle;
 }
 .link-danger { color: var(--danger) !important; }
 
