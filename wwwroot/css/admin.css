@@ -137,6 +137,11 @@ img { display: block; }
 .gallery-manage { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
 .gallery-item { text-align: center; }
 .gallery-item img { width: 140px; height: 92px; object-fit: cover; border-radius: 8px; margin-bottom: 0.35rem; }
+.gallery-item button {
+  background: none; border: none; font: inherit; cursor: pointer;
+  font-weight: 600; font-size: 0.85rem; padding: 0;
+}
+.hidden-form { display: none; }
 
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--brass); outline-offset: 2px;

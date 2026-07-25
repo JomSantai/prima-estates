@@ -71,7 +71,11 @@ public class AdminController : Controller
         if (coverFile != null && coverFile.Length > 0)
         {
             var url = await _storage.SaveAsync(coverFile);
-            if (url != null) model.CoverImageUrl = url;
+            if (url != null)
+                model.CoverImageUrl = url;
+            else
+                TempData["UploadWarning"] = "The cover image could not be uploaded. "
+                    + "Check the file is a jpg/png/webp under 5 MB, and that image hosting is configured correctly.";
         }
 
         if (model.Id == 0)

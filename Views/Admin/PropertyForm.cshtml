@@ -5,6 +5,11 @@
     var agents = (List<Agent>)ViewBag.Agents;
 }
 
+@if (TempData["UploadWarning"] != null)
+{
+    <div class="alert alert-error">@TempData["UploadWarning"]</div>
+}
+
 <form method="post" enctype="multipart/form-data" class="admin-form" asp-controller="Admin" asp-action="PropertyForm">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
@@ -31,7 +36,7 @@
         <label class="span-2">Address <input asp-for="Address" /></label>
         <label>Agent
             <select asp-for="AgentId">
-                <option value="">— Unassigned —</option>
+                <option value="">&mdash; Unassigned &mdash;</option>
                 @foreach (var a in agents)
                 {
                     <option value="@a.Id">@a.Name</option>
@@ -47,7 +52,7 @@
     <h2 class="form-section-title">Images</h2>
     <div class="form-grid">
         <label class="span-2">Cover image URL
-            <input asp-for="CoverImageUrl" placeholder="https://… or leave blank and upload below" />
+            <input asp-for="CoverImageUrl" placeholder="https://... or leave blank and upload below" />
         </label>
         <label>Upload cover image <input type="file" name="coverFile" accept=".jpg,.jpeg,.png,.webp" /></label>
         <label>Add gallery images <input type="file" name="galleryFiles" accept=".jpg,.jpeg,.png,.webp" multiple /></label>
@@ -60,11 +65,9 @@
             {
                 <div class="gallery-item">
                     <img src="@img.Url" alt="" />
-                    <form method="post" asp-controller="Admin" asp-action="DeleteImage" asp-route-id="@img.Id" asp-route-propertyId="@Model.Id"
-                          onsubmit="return confirm('Remove this image?');">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="link-danger">Remove</button>
-                    </form>
+                    @* Buttons reference a form declared AFTER this one - nesting forms is invalid HTML *@
+                    <button type="submit" form="delimg-@img.Id" class="link-danger"
+                            onclick="return confirm('Remove this image?');">Remove</button>
                 </div>
             }
         </div>
@@ -75,3 +78,16 @@
         <button type="submit" class="btn btn-primary">Save property</button>
     </div>
 </form>
+
+@* Delete-image forms live outside the main form so the HTML stays valid. *@
+@if (Model.Id != 0 && Model.Images.Any())
+{
+    foreach (var img in Model.Images)
+    {
+        <form id="delimg-@img.Id" method="post" class="hidden-form"
+              asp-controller="Admin" asp-action="DeleteImage"
+              asp-route-id="@img.Id" asp-route-propertyId="@Model.Id">
+            @Html.AntiForgeryToken()
+        </form>
+    }
+}
