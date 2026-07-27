@@ -2,6 +2,7 @@
     ViewData["Title"] = "Find your place in the Klang Valley";
     var featured = (List<Property>)ViewBag.Featured;
     var latest = (List<Property>)ViewBag.Latest;
+    var homeAgents = (List<Agent>)ViewBag.HomeAgents;
     var cities = (List<string>)ViewBag.Cities;
 }
 
@@ -68,6 +69,30 @@
             @foreach (var p in latest)
             {
                 <partial name="_PropertyCard" model="p" />
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container-wide">
+        <div class="section-head">
+            <h2>Meet our agents</h2>
+            <a class="section-link" asp-controller="Home" asp-action="Agents">View all &rarr;</a>
+        </div>
+        <div class="agent-row">
+            @foreach (var a in homeAgents)
+            {
+                <div class="agent-profile">
+                    <img src="@(string.IsNullOrEmpty(a.PhotoUrl) ? "/img/placeholder.svg" : a.PhotoUrl)" alt="@a.Name" loading="lazy" />
+                    <h3>@a.Name</h3>
+                    <span class="agent-ren">@a.RenLicense</span>
+                    <p>@a.Properties.Count active listing@(a.Properties.Count == 1 ? "" : "s")</p>
+                    <div class="agent-contact">
+                        <span>@a.Phone</span>
+                        <span>@a.Email</span>
+                    </div>
+                </div>
             }
         </div>
     </div>

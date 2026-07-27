@@ -26,6 +26,12 @@ public class HomeController : Controller
 
         ViewBag.Featured = featured;
         ViewBag.Latest = latest;
+        ViewBag.HomeAgents = await _db.Agents
+            .Include(a => a.Properties)
+            .OrderByDescending(a => a.Properties.Count)
+            .ThenBy(a => a.Name)
+            .Take(5)
+            .ToListAsync();
         ViewBag.Cities = await _db.Properties.Select(p => p.City).Distinct().OrderBy(c => c).ToListAsync();
         return View();
     }
