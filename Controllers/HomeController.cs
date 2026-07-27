@@ -15,13 +15,13 @@ public class HomeController : Controller
         var featured = await _db.Properties
             .Where(p => p.IsFeatured && p.Status == PropertyStatus.Available)
             .OrderByDescending(p => p.CreatedAt)
-            .Take(4)
+            .Take(5)
             .ToListAsync();
 
         var latest = await _db.Properties
             .Where(p => p.Status == PropertyStatus.Available)
             .OrderByDescending(p => p.CreatedAt)
-            .Take(6)
+            .Take(5)
             .ToListAsync();
 
         ViewBag.Featured = featured;

@@ -44,12 +44,12 @@
 @if (featured.Any())
 {
     <section class="section">
-        <div class="container">
+        <div class="container-wide">
             <div class="section-head">
                 <h2>Featured listings</h2>
                 <a class="section-link" asp-controller="Properties" asp-action="Index">View all →</a>
             </div>
-            <div class="prop-grid">
+            <div class="prop-grid prop-grid-5">
                 @foreach (var p in featured)
                 {
                     <partial name="_PropertyCard" model="p" />
@@ -60,11 +60,11 @@
 }
 
 <section class="section section-alt">
-    <div class="container">
+    <div class="container-wide">
         <div class="section-head">
             <h2>Fresh on the market</h2>
         </div>
-        <div class="prop-grid">
+        <div class="prop-grid prop-grid-5">
             @foreach (var p in latest)
             {
                 <partial name="_PropertyCard" model="p" />
