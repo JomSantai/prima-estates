@@ -26,17 +26,35 @@ public class ImageStorage : IImageStorage
         _env = env;
         _logger = logger;
 
-        var url = config["Cloudinary:Url"] ?? Environment.GetEnvironmentVariable("CLOUDINARY_URL");
-        if (!string.IsNullOrWhiteSpace(url))
+        var url = config["CLOUDINARY_URL"]
+                  ?? config["Cloudinary:Url"]
+                  ?? Environment.GetEnvironmentVariable("CLOUDINARY_URL");
+
+        if (string.IsNullOrWhiteSpace(url))
         {
-            try
-            {
-                _cloudinary = new Cloudinary(url) { Api = { Secure = true } };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Invalid CLOUDINARY_URL; falling back to local disk storage.");
-            }
+            _logger.LogWarning("IMAGE STORAGE: CLOUDINARY_URL is not set. "
+                + "Uploads will be saved to local disk and WILL BE LOST on redeploy.");
+            return;
+        }
+
+        if (!url.StartsWith("cloudinary://", StringComparison.OrdinalIgnoreCase)
+            || url.Contains("NEWKEY") || url.Contains("<"))
+        {
+            _logger.LogError("IMAGE STORAGE: CLOUDINARY_URL looks malformed (expected "
+                + "cloudinary://<key>:<secret>@<cloud>). Falling back to local disk.");
+            return;
+        }
+
+        try
+        {
+            _cloudinary = new Cloudinary(url) { Api = { Secure = true } };
+            _logger.LogInformation("IMAGE STORAGE: Cloudinary configured for cloud '{Cloud}'.",
+                _cloudinary.Api?.Account?.Cloud ?? "unknown");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "IMAGE STORAGE: could not initialise Cloudinary; "
+                + "falling back to local disk.");
         }
     }
 

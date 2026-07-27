@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PrimaEstates.Models;
 
 namespace PrimaEstates.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IDataProtectionKeyContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -12,6 +13,10 @@ public class AppDbContext : DbContext
     public DbSet<Agent> Agents => Set<Agent>();
     public DbSet<Enquiry> Enquiries => Set<Enquiry>();
     public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
+
+    // Persists ASP.NET Data Protection keys so logins/antiforgery tokens
+    // survive container restarts and redeploys.
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder mb)
     {

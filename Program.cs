@@ -22,6 +22,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddScoped<IImageStorage, ImageStorage>();
 
+// Keep Data Protection keys in the database so antiforgery tokens and auth
+// cookies remain valid across redeploys (containers are ephemeral).
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<AppDbContext>()
+    .SetApplicationName("PrimaEstates");
+
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(opt =>
@@ -46,6 +52,31 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
+
+    // EnsureCreated() won't add new tables to an already-created database, so
+    // make sure the Data Protection key table exists on existing deployments.
+    var isNpgsql = db.Database.ProviderName?.Contains("Npgsql") == true;
+    var createKeys = isNpgsql
+        ? """
+          CREATE TABLE IF NOT EXISTS "DataProtectionKeys" (
+              "Id" serial PRIMARY KEY,
+              "FriendlyName" text NULL,
+              "Xml" text NULL
+          );
+          """
+        : """
+          CREATE TABLE IF NOT EXISTS "DataProtectionKeys" (
+              "Id" INTEGER NOT NULL CONSTRAINT "PK_DataProtectionKeys" PRIMARY KEY AUTOINCREMENT,
+              "FriendlyName" TEXT NULL,
+              "Xml" TEXT NULL
+          );
+          """;
+    try { db.Database.ExecuteSqlRaw(createKeys); }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Could not ensure DataProtectionKeys table exists.");
+    }
+
     SeedData.Initialize(db, app.Configuration);
 }
 
