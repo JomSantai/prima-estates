@@ -26,22 +26,30 @@ public class ImageStorage : IImageStorage
         _env = env;
         _logger = logger;
 
-        var url = config["CLOUDINARY_URL"]
+        var raw = config["CLOUDINARY_URL"]
                   ?? config["Cloudinary:Url"]
                   ?? Environment.GetEnvironmentVariable("CLOUDINARY_URL");
 
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(raw))
         {
             _logger.LogWarning("IMAGE STORAGE: CLOUDINARY_URL is not set. "
                 + "Uploads will be saved to local disk and WILL BE LOST on redeploy.");
             return;
         }
 
-        if (!url.StartsWith("cloudinary://", StringComparison.OrdinalIgnoreCase)
-            || url.Contains("NEWKEY") || url.Contains("<"))
+        // Strip stray whitespace, wrapping quotes, and an accidental "NAME=" prefix -
+        // all of these are invisible in dashboard UIs but break the scheme check.
+        var url = raw.Trim().Trim('"', '\'');
+        if (url.StartsWith("CLOUDINARY_URL=", StringComparison.OrdinalIgnoreCase))
+            url = url["CLOUDINARY_URL=".Length..].Trim().Trim('"', '\'');
+
+        if (!url.StartsWith("cloudinary://", StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogError("IMAGE STORAGE: CLOUDINARY_URL looks malformed (expected "
-                + "cloudinary://<key>:<secret>@<cloud>). Falling back to local disk.");
+            // Show only the leading, non-sensitive portion so the cause is visible.
+            var head = url.Length > 14 ? url[..14] : url;
+            _logger.LogError("IMAGE STORAGE: CLOUDINARY_URL does not start with 'cloudinary://'. "
+                + "Raw length {RawLen}, cleaned length {Len}, starts with: '{Head}'. "
+                + "Falling back to local disk.", raw.Length, url.Length, head);
             return;
         }
 
