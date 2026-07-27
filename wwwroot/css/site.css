@@ -57,20 +57,31 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.
 
 /* ---------- Hero ---------- */
 .hero {
-  background: linear-gradient(160deg, var(--pine) 0%, var(--pine-deep) 100%);
+  /* Drop your photo in at wwwroot/img/hero.jpg. The gradient sits on top so the
+     text stays readable whatever the photo looks like. If the file is missing,
+     the gradient alone still renders and the hero looks fine. */
+  background-color: var(--pine-deep);
+  background-image:
+    linear-gradient(rgba(20, 35, 29, 0.78), rgba(20, 35, 29, 0.86)),
+    url('/img/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--paper);
-  padding: 5rem 0 4rem;
+  padding: 6rem 0 5rem;
 }
+.hero-inner { text-align: center; }
 .hero-eyebrow {
   text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.78rem;
   color: var(--brass); margin-bottom: 1rem; font-weight: 600;
 }
-.hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 2.25rem; max-width: 720px; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); margin: 0 auto 2.25rem; max-width: 760px; }
 
 .hero-search {
   background: var(--white); color: var(--ink);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  padding: 1rem 1.25rem 1.25rem; max-width: 860px;
+  padding: 1rem 1.25rem 1.25rem; max-width: 860px; margin: 0 auto;
+  text-align: left;
 }
 .hs-tabs { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
 .hs-tabs label { cursor: pointer; }
@@ -91,8 +102,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.
 }
 .hs-fields button:hover { background: var(--brass-dark); }
 
-.hero-stats { display: flex; gap: 2.75rem; margin-top: 2.5rem; flex-wrap: wrap; }
-.hero-stats div { display: flex; flex-direction: column; }
+.hero-stats {
+  display: flex; gap: 2.75rem; margin-top: 2.5rem;
+  flex-wrap: wrap; justify-content: center;
+}
+.hero-stats div { display: flex; flex-direction: column; align-items: center; }
 .hero-stats strong { font-family: var(--font-display); font-size: 1.5rem; color: var(--brass); }
 .hero-stats span { font-size: 0.85rem; opacity: 0.75; }
 
