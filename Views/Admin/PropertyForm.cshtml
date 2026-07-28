@@ -10,6 +10,8 @@
     <div class="alert alert-error">@TempData["UploadWarning"]</div>
 }
 
+<partial name="_ValidationSummary" />
+
 <form method="post" enctype="multipart/form-data" class="admin-form" asp-controller="Admin" asp-action="PropertyForm">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />

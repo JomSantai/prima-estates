@@ -68,6 +68,13 @@ public class AdminController : Controller
         ViewBag.Agents = await _db.Agents.OrderBy(a => a.Name).ToListAsync();
         if (!ModelState.IsValid) return View(model);
 
+        model.Title ??= "";
+        model.Description ??= "";
+        model.City ??= "";
+        model.State ??= "";
+        model.Address ??= "";
+        model.CoverImageUrl ??= "";
+
         if (coverFile != null && coverFile.Length > 0)
         {
             var url = await _storage.SaveAsync(coverFile);
@@ -152,6 +159,14 @@ public class AdminController : Controller
     public async Task<IActionResult> AgentForm(Agent model, IFormFile? photoFile)
     {
         if (!ModelState.IsValid) return View(model);
+
+        // Optional text fields bind as null when left blank, but the columns are
+        // NOT NULL - normalise so a blank field saves as an empty string.
+        model.Name ??= "";
+        model.Phone ??= "";
+        model.Email ??= "";
+        model.RenLicense ??= "";
+        model.PhotoUrl ??= "";
 
         if (photoFile != null && photoFile.Length > 0)
         {

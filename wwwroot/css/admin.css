@@ -163,3 +163,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table-scroll .admin-table { min-width: 720px; }
 }
+
+.validation-list { margin: 0.4rem 0 0 1.1rem; }
+.validation-list li { margin-bottom: 0.2rem; }

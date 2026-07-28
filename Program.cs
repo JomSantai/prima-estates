@@ -6,7 +6,13 @@ using PrimaEstates.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+// Non-nullable string properties would otherwise be treated as implicitly
+// [Required] (because <Nullable>enable</Nullable> is on), which wrongly rejects
+// genuinely optional fields such as Email or PhotoUrl.
+builder.Services.AddControllersWithViews(options =>
+{
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 
 // --- Database provider selection ---
 // Production (Railway): PostgreSQL via DATABASE_URL / connection string.

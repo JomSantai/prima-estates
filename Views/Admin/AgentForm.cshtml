@@ -4,6 +4,8 @@
     Layout = "_AdminLayout";
 }
 
+<partial name="_ValidationSummary" />
+
 <form method="post" enctype="multipart/form-data" class="admin-form" asp-controller="Admin" asp-action="AgentForm">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />

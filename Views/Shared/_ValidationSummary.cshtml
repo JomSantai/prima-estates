@@ -1,0 +1,21 @@
+@* Renders any model-state errors so a rejected form never fails silently. *@
+@if (!ViewData.ModelState.IsValid)
+{
+    var errors = ViewData.ModelState
+        .SelectMany(kv => kv.Value!.Errors.Select(e => new { Field = kv.Key, e.ErrorMessage }))
+        .Where(e => !string.IsNullOrWhiteSpace(e.ErrorMessage))
+        .ToList();
+
+    if (errors.Any())
+    {
+        <div class="alert alert-error">
+            <strong>Please check the form:</strong>
+            <ul class="validation-list">
+                @foreach (var err in errors)
+                {
+                    <li>@err.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+}
